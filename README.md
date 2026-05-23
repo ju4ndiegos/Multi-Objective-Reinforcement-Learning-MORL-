@@ -9,10 +9,10 @@ Se exploran ambientes de [MO-Gymnasium](https://mo-gymnasium.farama.org/) con al
 
 | Ambiente | Objetivos | Algoritmo | Agente entrenado |
 |---|---|---|---|
-| **Deep Sea Treasure** | 2 (tiempo, tesoro) | PQL + Q-Learning Escalarizado | ![DST](resources/agent_gifs/dst_pql.gif) |
+| **Deep Sea Treasure** | 2 (tiempo, tesoro) | PQL + Q-Learning Escalarizado | ![DST](resources/agent_gifs/dst_best.gif) |
 | **Resource Gathering** | 3 (muerte, oro, diamante) | GPI-LS + Q-Learning Escalarizado | ![RG](resources/agent_gifs/rg_gpi_both.gif) |
-| **Mountain Car** | 3 | PQL | — |
-| **Minecart** | 3 | PCN + GPI-LS | ![Minecart](resources/agent_gifs/minecart_pcn.gif) |
+| **Mountain Car** | 3 (tiempo, accel. izq., accel. der.) | PCN + GPI-LS | ![MC](resources/agent_gifs/mountaincar_pcn.gif) |
+| **Minecart** | 3 (mineral 1, mineral 2, combustible) | PCN + GPI-LS | ![Minecart](resources/agent_gifs/minecart_pcn.gif) |
 
 ### Ambientes — Políticas Aleatorias
 
@@ -41,6 +41,25 @@ Análisis profundo del ambiente **Resource Gathering** (cuadrícula 5×5, 3 obje
 - **MPMOQLearning con GPI-LS**: multi-política tabular, selección de pesos mediante Generalised Policy Improvement
 - Análisis de parámetros: gamma, epsilon, random vs gpi-ls
 - Visualizaciones del frente en proyecciones 2D
+
+### `mountain_car_morl.ipynb`
+Análisis profundo del ambiente **Mountain Car** (`mo-mountaincar-v0`, estado continuo en ℝ², 3 objetivos).
+
+- Espacio de objetivos en ℝ³ estimado con política aleatoria (150 episodios)
+- Por qué PQL falla: estado continuo incompatible con tabla Q
+- **PCN**: red condicionada en retorno objetivo; evaluación con distintos deseos
+- **GPI-LS** neuronal: pesos como preferencias relativas; Linear Support automático
+- Análisis: `scaling_factor` y su impacto en el aprendizaje
+- Comparación PCN vs GPI-LS sobre el espacio de objetivos
+
+### `minecart_morl.ipynb`
+Análisis profundo del ambiente **Minecart** (`minecart-deterministic-v0`, estado continuo en ℝ⁷, 3 objetivos).
+
+- Frente de Pareto verdadero 3D via `env.unwrapped.pareto_front(gamma)`
+- **PCN** (determinístico): condicionamiento en retorno mineral/combustible objetivo
+- **GPI-LS** (estocástico, `minecart-v0`): pesos relativos + PER
+- Análisis de `scaling_factor` para objetivos con escalas dispares
+- Comparación cuantitativa de los puntos descubiertos vs el frente verdadero
 
 ### `multiobjective_Reinforcement_Learning_grupo4_202610.ipynb`
 Survey de múltiples ambientes y algoritmos de MORL.
